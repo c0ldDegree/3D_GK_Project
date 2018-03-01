@@ -54,11 +54,10 @@ namespace GK_OpenTK
             Dictionary<String, Material> materials = Material.LoadFromFile(@"Materials\TheCity.mtl");
             MyComplexObjectFactory3 modelObj = MyComplexObjectFactory3.LoadFromFile(@"Models\TheCity.obj");
             Tuple<int[], Dictionary<String, int>> textInd = modelObj.GetTexturesInd(materials);
-            int[] textIndices = textInd.Item1;
+            float[] textIndices = new float[textInd.Item1.Length];
             for (int i = 0; i < textIndices.Length; i++)
             {
-                if (textIndices[i] == 3)
-                    break;
+                textIndices[i] = textInd.Item1[i];
             }
             Dictionary<String, int> mapInd = textInd.Item2;
             List<String> texturesPath = new List<string>();
