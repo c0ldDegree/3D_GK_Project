@@ -56,6 +56,11 @@ namespace GK_OpenTK
             programGouround.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderGouraud.c");
             programGouround.Link();
 
+            ShaderProgram programArrayText = new ShaderProgram();
+            programArrayText.AddShader(ShaderType.VertexShader, @"Shaders\VertexShaderPongTextArray.c");
+            programArrayText.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderPongTextArray.c");
+            programArrayText.Link();
+
             //   program = programSimple;
 
             bool isTextured = true;
@@ -63,12 +68,13 @@ namespace GK_OpenTK
             CreateProjection();
 
             // GameObjectsFactory.city(program,new Vector4(0,0,-1000,0),false);
-             gameObjects.Add(GameObjectsFactory.bus(programSimple, new Vector4(0, 60, -1000f, 0), isTextured));
-          //    gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 0, -100, 0), isTextured));
+            gameObjects.Add(GameObjectsFactory.bus(programSimple, new Vector4(0, 35, -1000f, 0), isTextured));
+            //    gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 0, -100, 0), isTextured));
             // gameObjects.Add(GameObjectsFactory.earth(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-           // gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 60, -1000, 0), isTextured));
-           gameObjects.Add(GameObjectsFactory.city(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-       
+            // gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 60, -1000, 0), isTextured));
+            //   gameObjects.Add(GameObjectsFactory.city(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
+            gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
+
             //  uniTime = GL.GetUniformLocation(program.program, "time");
         }
         protected override void OnLoad(EventArgs e)
@@ -130,22 +136,22 @@ namespace GK_OpenTK
             if (keyState.IsKeyDown(Key.Left))
             {
                 // phi--;
-                //offsetCamera.X += change;
-                //camera.offset = offsetCamera;
-                gameObjects.First().Rotate(0.1f);
+              // offsetCamera.X += change;
+              // camera.offset = offsetCamera;
+               gameObjects.First().Rotate(0.1f);
             }
             if (keyState.IsKeyDown(Key.Right))
             {
-                //offsetCamera.X -= change;
-                //camera.offset = offsetCamera;
-                gameObjects.First().Rotate(-0.1f);
+              //  offsetCamera.X -= change;
+              //  camera.offset = offsetCamera;
+               gameObjects.First().Rotate(-0.1f);
             }
             if (keyState.IsKeyDown(Key.Up))
             {
                 // phi--;
-                // offsetCamera.Y += change;
+               //  offsetCamera.Y += change;
                 // camera.offset = offsetCamera;
-                gameObjects.First().Move();
+               gameObjects.First().Move();
             }
             if (keyState.IsKeyDown(Key.Down))
             {
@@ -159,7 +165,7 @@ namespace GK_OpenTK
         {
             GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Uniform3(23, new Vector3(0, 2, -100f));
+            GL.Uniform3(23, new Vector3(0, 2, -100f));//0,2,-100
             int lastProg = -1;
             foreach (var o in gameObjects)
             {

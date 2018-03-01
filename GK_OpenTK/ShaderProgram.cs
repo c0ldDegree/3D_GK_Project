@@ -43,6 +43,10 @@ namespace GK_OpenTK
             foreach (var sh in shaders)
                 GL.AttachShader(_program, sh);
             GL.BindFragDataLocation(_program, 0, "outColor");
+            GL.BindAttribLocation(_program, 1, "position_modelspace");
+            GL.BindAttribLocation(_program, 2, "textCoord");
+            GL.BindAttribLocation(_program, 3, "normal_modelspace");
+            GL.BindAttribLocation(_program, 4, "texture_index");
             GL.LinkProgram(_program);
             //   GL.UseProgram(shaderProgram);
             foreach (var sh in shaders)
