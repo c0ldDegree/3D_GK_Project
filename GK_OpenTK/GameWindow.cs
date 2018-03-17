@@ -34,6 +34,7 @@ namespace GK_OpenTK
         int k;
         List<AGameObject> gameObjects = new List<AGameObject>();
         List<Light> reflectors = new List<Light>();
+        List<int> lights = new List<int>();
         public GameWindow() : base(1280, 720, GraphicsMode.Default, "My GK Program", GameWindowFlags.Default,
             DisplayDevice.Default, 4, 5, GraphicsContextFlags.ForwardCompatible)
         { }
@@ -76,16 +77,16 @@ namespace GK_OpenTK
             CreateProjection();
 
             // GameObjectsFactory.city(program,new Vector4(0,0,-1000,0),false);
-            gameObjects.Add(GameObjectsFactory.bus(programGouround, new Vector4(0, 35, -1000f, 0), isTextured));
+            gameObjects.Add(GameObjectsFactory.bus(multiLightsProgram, new Vector4(0, 35, -1000f, 0), isTextured));
             //    gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 0, -100, 0), isTextured));
             // gameObjects.Add(GameObjectsFactory.earth(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-             gameObjects.Add(GameObjectsFactory.f16(programPong, new Vector4(0, 60, -1150, 0), isTextured));
+              gameObjects.Add(GameObjectsFactory.f16(multiLightsProgram, new Vector4(0, 60, -1150, 0), isTextured));
             //   gameObjects.Add(GameObjectsFactory.city(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-           // gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
+            // gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
 
             //  uniTime = GL.GetUniformLocation(program.program, "time");
             //GL.Uniform3(23, new Vector3(0, 300, -1150f));//0,2,-100
-            
+
             //Light reflector = new Light();
             //reflector.position=new Vector4(0, 60, -1100, 1);
             //reflector.intensities =new Vector3(2, 2, 2);
@@ -96,8 +97,17 @@ namespace GK_OpenTK
             //reflectors.Add(reflector);
             //AddLights2Program(multiLightsProgram);
             //GL.UseProgram(multiLightsProgram.program);
-           // int loc = GL.GetUniformLocation(multiLightsProgram.program, "numLights");
-           // GL.Uniform1(loc, reflectors.Count);
+            // int loc = GL.GetUniformLocation(multiLightsProgram.program, "numLights");
+            // GL.Uniform1(loc, reflectors.Count);
+            GL.UseProgram(multiLightsProgram.program);
+            lights.Add(GL.GetUniformLocation(multiLightsProgram.program, "allLights[0].LightPosition_worldspace"));
+            lights.Add(GL.GetUniformLocation(multiLightsProgram.program, "allLights[1].LightPosition_worldspace"));
+            lights.Add(GL.GetUniformLocation(multiLightsProgram.program, "allLights[2].LightPosition_worldspace"));
+            multiLightsProgram.SetUniform(lights[0], new Vector3(-16, 57, -1055f));
+            multiLightsProgram.SetUniform(lights[0], new Vector3(-46, 57, -1055f));
+            multiLightsProgram.SetUniform(lights[0], new Vector3(-31, 77, -1035f));
+            multiLightsProgram.SetUniform(GL.GetUniformLocation(multiLightsProgram.program, "numLights"), 3);
+
         }
         private void AddLights2Program(ShaderProgram p)
         {
@@ -224,7 +234,12 @@ namespace GK_OpenTK
                 // GL.UseProgram(o.model.Program);
                 o.Render(camera);
                 lastProg = o.model.Program;
-                GL.Uniform3(23, new Vector3(-16, 57, -1055f));//-16,57,-1055
+                // GL.Uniform3(23, new Vector3(-16, 57, -1055f));//-16,57,-1055
+                GL.Uniform1(GL.GetUniformLocation(o.model.Program, "numLights"), 3);
+                GL.Uniform3(lights[0], new Vector3(-16, 57, -1055f));
+                GL.Uniform3(lights[1], new Vector3(-46, 57, -1055f));
+                GL.Uniform3(lights[2], new Vector3(-31, 120, -1000f));
+
             }
         
             //earth.Render(camera);
