@@ -76,10 +76,10 @@ namespace GK_OpenTK
             CreateProjection();
 
             // GameObjectsFactory.city(program,new Vector4(0,0,-1000,0),false);
-            gameObjects.Add(GameObjectsFactory.bus(programPong, new Vector4(0, 35, -1000f, 0), isTextured));
+            gameObjects.Add(GameObjectsFactory.bus(programGouround, new Vector4(0, 35, -1000f, 0), isTextured));
             //    gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 0, -100, 0), isTextured));
             // gameObjects.Add(GameObjectsFactory.earth(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-          //   gameObjects.Add(GameObjectsFactory.f16(programPong, new Vector4(0, 60, -1150, 0), isTextured));
+             gameObjects.Add(GameObjectsFactory.f16(programPong, new Vector4(0, 60, -1150, 0), isTextured));
             //   gameObjects.Add(GameObjectsFactory.city(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
            // gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
 
@@ -224,8 +224,9 @@ namespace GK_OpenTK
                 // GL.UseProgram(o.model.Program);
                 o.Render(camera);
                 lastProg = o.model.Program;
+                GL.Uniform3(23, new Vector3(-16, 57, -1055f));//-16,57,-1055
             }
-            GL.Uniform3(23, new Vector3(-16, 57, -1055f));//0,2,-100
+        
             //earth.Render(camera);
             SwapBuffers();
         }
