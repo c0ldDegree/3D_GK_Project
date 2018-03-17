@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL4;
 using System.IO;
+using OpenTK;
 
 namespace GK_OpenTK
 {
@@ -54,6 +55,22 @@ namespace GK_OpenTK
                 GL.DetachShader(_program, sh);
                 GL.DeleteShader(sh);
             }
+        }
+        public void SetUniform(int location,float value)
+        {
+            GL.Uniform1(location, value);
+        }
+        public void SetUniform(int location,Vector2 value)
+        {
+            GL.Uniform2(location, value);
+        }
+        public void SetUniform(int location, Vector3 value)
+        {
+            GL.Uniform3(location, value);
+        }
+        public void SetUniform(int location, Vector4 value)
+        {
+            GL.Uniform4(location, value);
         }
         public void Dispose()
         {

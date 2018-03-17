@@ -33,6 +33,7 @@ namespace GK_OpenTK
         private Vector3 offsetCamera = Vector3.Zero;
         int k;
         List<AGameObject> gameObjects = new List<AGameObject>();
+        List<Light> reflectors = new List<Light>();
         public GameWindow() : base(1280, 720, GraphicsMode.Default, "My GK Program", GameWindowFlags.Default,
             DisplayDevice.Default, 4, 5, GraphicsContextFlags.ForwardCompatible)
         { }
@@ -61,6 +62,13 @@ namespace GK_OpenTK
             programArrayText.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderPongTextArray.c");
             programArrayText.Link();
 
+
+            ShaderProgram multiLightsProgram = new ShaderProgram();
+            multiLightsProgram.AddShader(ShaderType.VertexShader, @"Shaders\VertexShaderPhongMultiLights.c");
+            multiLightsProgram.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderPhongMultiLights.c");
+            multiLightsProgram.Link();
+
+
             //   program = programSimple;
 
             bool isTextured = true;
@@ -68,14 +76,53 @@ namespace GK_OpenTK
             CreateProjection();
 
             // GameObjectsFactory.city(program,new Vector4(0,0,-1000,0),false);
-            gameObjects.Add(GameObjectsFactory.bus(programSimple, new Vector4(0, 35, -1000f, 0), isTextured));
+            gameObjects.Add(GameObjectsFactory.bus(programPong, new Vector4(0, 35, -1000f, 0), isTextured));
             //    gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 0, -100, 0), isTextured));
             // gameObjects.Add(GameObjectsFactory.earth(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-            // gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 60, -1000, 0), isTextured));
+          //   gameObjects.Add(GameObjectsFactory.f16(programPong, new Vector4(0, 60, -1150, 0), isTextured));
             //   gameObjects.Add(GameObjectsFactory.city(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-            gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
+           // gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
 
             //  uniTime = GL.GetUniformLocation(program.program, "time");
+            //GL.Uniform3(23, new Vector3(0, 300, -1150f));//0,2,-100
+            
+            //Light reflector = new Light();
+            //reflector.position=new Vector4(0, 60, -1100, 1);
+            //reflector.intensities =new Vector3(2, 2, 2);
+            //reflector.attenuation = 0.1f;
+            //reflector.ambientCoefficient = 0.0f;
+            //reflector.coneAngle = 15.0f;
+            //reflector.coneDirection = gameObjects.First().direction;
+            //reflectors.Add(reflector);
+            //AddLights2Program(multiLightsProgram);
+            //GL.UseProgram(multiLightsProgram.program);
+           // int loc = GL.GetUniformLocation(multiLightsProgram.program, "numLights");
+           // GL.Uniform1(loc, reflectors.Count);
+        }
+        private void AddLights2Program(ShaderProgram p)
+        {
+            string lightsArrayName = "allLights";
+            for(int i = 0; i < reflectors.Count; i++)
+            {
+               string name = lightsArrayName + "[" + i.ToString() + "]."+"position";
+               int loc=GL.GetUniformLocation(p.program,name);
+               p.SetUniform(loc, reflectors[i].position);
+               name = lightsArrayName + "[" + i.ToString() + "]." + "intensities";
+               loc = GL.GetUniformLocation(p.program, name);
+               p.SetUniform(loc, reflectors[i].intensities);
+                name = lightsArrayName + "[" + i.ToString() + "]." + "coneDirection";
+                loc = GL.GetUniformLocation(p.program, name);
+                p.SetUniform(loc, reflectors[i].coneDirection);
+                name = lightsArrayName + "[" + i.ToString() + "]." + "coneAngle";
+                loc = GL.GetUniformLocation(p.program, name);
+                p.SetUniform(loc, reflectors[i].coneAngle);
+                name = lightsArrayName + "[" + i.ToString() + "]." + "attenuation";
+                loc = GL.GetUniformLocation(p.program, name);
+                p.SetUniform(loc, reflectors[i].attenuation);
+                name = lightsArrayName + "[" + i.ToString() + "]." + "ambientCoefficient";
+                loc = GL.GetUniformLocation(p.program, name);
+                p.SetUniform(loc, reflectors[i].ambientCoefficient);
+            }
         }
         protected override void OnLoad(EventArgs e)
         {
@@ -91,12 +138,13 @@ namespace GK_OpenTK
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             _time += (float)e.Time;
-            //  GL.Uniform3(colorUniform, new Vector3(_time, 1.0f, 0.0f));
-           // gameObjects.First().SetPosition(new Vector4(gameObjects.First().possition.X + 0.1f, gameObjects.First().possition.Y, gameObjects.First().possition.Z,0));
+          //  GL.Uniform3(23, new Vector3(0, 300, -1150f));//0,2,-100
+            // gameObjects.First().SetPosition(new Vector4(gameObjects.First().possition.X + 0.1f, gameObjects.First().possition.Y, gameObjects.First().possition.Z,0));
             GL.Uniform1(uniTime, _time);
             camera.Update(_time, e.Time);
             // k = k > (int)(PolygonMode.Fill) ? (int)PolygonMode.Point : k;
             // GL.PolygonMode(MaterialFace.FrontAndBack,(PolygonMode)(k++));
+
             HandleKeyboard(e.Time);
         }
         private void HandleKeyboard(double dt)
@@ -163,18 +211,21 @@ namespace GK_OpenTK
         }
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            GL.ClearColor(0.0f, 1.0f, 0.0f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Uniform3(23, new Vector3(0, 2, -100f));//0,2,-100
+            //GL.Uniform3(23, new Vector3(0, 5000, -100f));//0,2,-100
             int lastProg = -1;
             foreach (var o in gameObjects)
             {
-                if(o.model.Program!=lastProg)
+                if (o.model.Program != lastProg)
+                {
                     GL.UniformMatrix4(22, false, ref _projectionMatrix);
+                }
                 // GL.UseProgram(o.model.Program);
                 o.Render(camera);
                 lastProg = o.model.Program;
             }
+            GL.Uniform3(23, new Vector3(-16, 57, -1055f));//0,2,-100
             //earth.Render(camera);
             SwapBuffers();
         }
