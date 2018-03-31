@@ -35,6 +35,7 @@ namespace GK_OpenTK
         List<AGameObject> gameObjects = new List<AGameObject>();
         List<Light> reflectors = new List<Light>();
         List<Light> lights = new List<Light>();
+        Dictionary<String, int> programs;
         public GameWindow() : base(1280, 720, GraphicsMode.Default, "My GK Program", GameWindowFlags.Default,
             DisplayDevice.Default, 4, 5, GraphicsContextFlags.ForwardCompatible)
         { }
@@ -44,37 +45,39 @@ namespace GK_OpenTK
         }
         private void InitGame()
         {
+            programs = new Dictionary<string, int>();
             ShaderProgram programPong = new ShaderProgram();
             programPong.AddShader(ShaderType.VertexShader, @"Shaders\VertexShaderPong.c");
             programPong.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderPong.c");
             programPong.Link();
-
+            programs.Add("programPong", programPong.program);
             ShaderProgram programSimple = new ShaderProgram();
             programSimple.AddShader(ShaderType.VertexShader, @"Shaders\SimpleVertexShader.c");
             programSimple.AddShader(ShaderType.FragmentShader, @"Shaders\SimpleFragmentShader.c");
             programSimple.Link();
+            programs.Add("programSimple", programSimple.program);
             ShaderProgram programGouround = new ShaderProgram();
             programGouround.AddShader(ShaderType.VertexShader, @"Shaders\VertexShaderGouraud.c");
             programGouround.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderGouraud.c");
             programGouround.Link();
-
+            programs.Add("programGourounde", programGouround.program);
             ShaderProgram programArrayText = new ShaderProgram();
             programArrayText.AddShader(ShaderType.VertexShader, @"Shaders\VertexShaderPongTextArray.c");
             programArrayText.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderPongTextArray.c");
             programArrayText.Link();
-
+            programs.Add("programArrayText", programArrayText.program);
 
             ShaderProgram multiLightsProgram = new ShaderProgram();
             multiLightsProgram.AddShader(ShaderType.VertexShader, @"Shaders\VertexShaderPhongMultiLights.c");
             multiLightsProgram.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderPhongMultiLights.c");
             multiLightsProgram.Link();
-
+            programs.Add("multiLightsProgram", multiLightsProgram.program);
 
             ShaderProgram multiLightsGouraundProgram = new ShaderProgram();
             multiLightsGouraundProgram.AddShader(ShaderType.VertexShader, @"Shaders\VertexShaderGouraundMultiLights.c");
             multiLightsGouraundProgram.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderGouraundMultiLights.c");
             multiLightsGouraundProgram.Link();
-
+            programs.Add("multiLightsGouraundProgram", multiLightsGouraundProgram.program);
             //   program = programSimple;
 
             bool isTextured = true;
@@ -217,6 +220,15 @@ namespace GK_OpenTK
             {
                 offsetCamera.Y -= change;
                 camera.offset = offsetCamera;
+            }
+            if (keyState.IsKeyDown(Key.F))
+            {
+                int prog;
+                programs.TryGetValue("multiLightsGouraundProgram", out prog);
+                if (gameObjects[1].model.Program == prog)
+                    programs.TryGetValue("multiLightsProgram", out prog);
+                gameObjects[1].model.Program = prog;
+
             }
 
 
