@@ -13,7 +13,7 @@ namespace GK_OpenTK.GameObjects
 {
     abstract class AGameObject
     {
-        public bool rot_dir =false;
+        public bool rot_dir = false;
         protected ARenderable2 _model;
         protected Vector4 _possition;
         protected Vector4 _rotation;
@@ -34,6 +34,7 @@ namespace GK_OpenTK.GameObjects
         public float ang = 0;
         public float pom_angle = 0;
         public float camera_angle = 0;
+        public Vector3 dlHeadlights;
 
         public AGameObject(ARenderable2 model, Vector4 rotation, Vector4 possition, Vector3 center, float scale)
         {
@@ -61,7 +62,7 @@ namespace GK_OpenTK.GameObjects
             GL.UniformMatrix4(21, false, ref _viewMatrix);
             _model.Render();
         }
-        public void Rotate(float angle,List<Light> lights)
+        public void Rotate(float angle, List<Light> lights)
         {
             //  quat = Quaternion.FromAxisAngle(GL., angle * (float)Math.PI / 180f);
 
@@ -72,20 +73,32 @@ namespace GK_OpenTK.GameObjects
                 camera_angle += -angle * (float)Math.PI / 180;
                 //  var s = Matrix4.CreateScale(_scale);
                 // var r = Matrix4.CreateFromQuaternion(quat);
-                var t2 = Matrix4.CreateTranslation(_possition.X, _possition.Y, _possition.Z);
-                var p1 = Matrix4.CreateTranslation(-_center);
-                var r_l = Matrix4.CreateRotationY((-angle * (float)Math.PI / 180) / 20);
-                var p2 = Matrix4.CreateTranslation(_center);
-                r_l = p1 * r_l * p2;
-                var _modelMatrix = t2 * r_l;
-                for (int i = 0; i < 2; i++)
-                {
-                    lights[i].position = new Matrix3(_modelMatrix) * lights[i].position;
-                }
+                //var t2 = Matrix4.CreateTranslation(_possition.X, _possition.Y, _possition.Z);
+                //var p1 = Matrix4.CreateTranslation(-_center);
+                //var r_l = Matrix4.CreateRotationY((-angle * (float)Math.PI / 180));
+                //var p2 = Matrix4.CreateTranslation(_center);
+                //r_l = p1 * r_l * p2;
+                //// var _modelMatrix = t2 * r_l;
+                //for (int i = 0; i < 2; i++)
+                //{
+                //    lights[i].position =new Vector3(lights[i].position.X*_direction.X*_scale, lights[i].position.Y * _direction.Y*_scale, lights[i].position.Z * _direction.Z*_scale);
+                //}
 
+                var p1 = Matrix4.CreateTranslation(-_center);
+                var r_l = Matrix4.CreateRotationY(-angle * (float)Math.PI / 180);
+                var p2 = Matrix4.CreateTranslation(_center);
+
+                //  r_l = p1* r_l * p2;
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector3 pos = lights[i].position - _center;
+                    pos = new Vector3(r_l * new Vector4(pos, 0));
+                    lights[i].position = _center + pos;
+                }
             }
             angle = ang * 180 / (float)Math.PI + angle;
             ang = angle * (float)Math.PI / 180;
+        
         }
 
         public void Move(List<Light> lights)
