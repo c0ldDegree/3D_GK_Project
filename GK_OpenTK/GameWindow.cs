@@ -34,7 +34,7 @@ namespace GK_OpenTK
         int k;
         List<AGameObject> gameObjects = new List<AGameObject>();
         List<Light> reflectors = new List<Light>();
-        List<int> lights = new List<int>();
+        List<Light> lights = new List<Light>();
         public GameWindow() : base(1280, 720, GraphicsMode.Default, "My GK Program", GameWindowFlags.Default,
             DisplayDevice.Default, 4, 5, GraphicsContextFlags.ForwardCompatible)
         { }
@@ -70,17 +70,22 @@ namespace GK_OpenTK
             multiLightsProgram.Link();
 
 
+            ShaderProgram multiLightsGouraundProgram = new ShaderProgram();
+            multiLightsGouraundProgram.AddShader(ShaderType.VertexShader, @"Shaders\VertexShaderGouraundMultiLights.c");
+            multiLightsGouraundProgram.AddShader(ShaderType.FragmentShader, @"Shaders\FragmentShaderGouraundMultiLights.c");
+            multiLightsGouraundProgram.Link();
+
             //   program = programSimple;
 
             bool isTextured = true;
             camera = new StaticCamera();
             CreateProjection();
 
-            // GameObjectsFactory.city(program,new Vector4(0,0,-1000,0),false);
+           // GameObjectsFactory.city(program,new Vector4(0,0,-1000,0),false);
             gameObjects.Add(GameObjectsFactory.bus(multiLightsProgram, new Vector4(0, 35, -1000f, 0), isTextured));
             //    gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 0, -100, 0), isTextured));
             // gameObjects.Add(GameObjectsFactory.earth(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-              gameObjects.Add(GameObjectsFactory.f16(multiLightsProgram, new Vector4(0, 60, -1150, 0), isTextured));
+              gameObjects.Add(GameObjectsFactory.f16(multiLightsGouraundProgram, new Vector4(0, 60, -1150, 0), isTextured));
             //   gameObjects.Add(GameObjectsFactory.city(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
             // gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
 
@@ -100,40 +105,37 @@ namespace GK_OpenTK
             // int loc = GL.GetUniformLocation(multiLightsProgram.program, "numLights");
             // GL.Uniform1(loc, reflectors.Count);
             GL.UseProgram(multiLightsProgram.program);
-            lights.Add(GL.GetUniformLocation(multiLightsProgram.program, "allLights[0].LightPosition_worldspace"));
-            lights.Add(GL.GetUniformLocation(multiLightsProgram.program, "allLights[1].LightPosition_worldspace"));
-            lights.Add(GL.GetUniformLocation(multiLightsProgram.program, "allLights[2].LightPosition_worldspace"));
-            multiLightsProgram.SetUniform(lights[0], new Vector3(-16, 57, -1055f));
-            multiLightsProgram.SetUniform(lights[0], new Vector3(-46, 57, -1055f));
-            multiLightsProgram.SetUniform(lights[0], new Vector3(-31, 77, -1035f));
+            lights.Add(new Light(GL.GetUniformLocation(multiLightsProgram.program, "allLights[0].LightPosition_worldspace"), new Vector3(-16, 57, -1055f)));
+            lights.Add(new Light(GL.GetUniformLocation(multiLightsProgram.program, "allLights[1].LightPosition_worldspace"), new Vector3(-46, 57, -1055f)));
+            lights.Add(new Light(GL.GetUniformLocation(multiLightsProgram.program, "allLights[2].LightPosition_worldspace"), new Vector3(-31, 77, -1035f)));
             multiLightsProgram.SetUniform(GL.GetUniformLocation(multiLightsProgram.program, "numLights"), 3);
 
         }
-        private void AddLights2Program(ShaderProgram p)
-        {
-            string lightsArrayName = "allLights";
-            for(int i = 0; i < reflectors.Count; i++)
-            {
-               string name = lightsArrayName + "[" + i.ToString() + "]."+"position";
-               int loc=GL.GetUniformLocation(p.program,name);
-               p.SetUniform(loc, reflectors[i].position);
-               name = lightsArrayName + "[" + i.ToString() + "]." + "intensities";
-               loc = GL.GetUniformLocation(p.program, name);
-               p.SetUniform(loc, reflectors[i].intensities);
-                name = lightsArrayName + "[" + i.ToString() + "]." + "coneDirection";
-                loc = GL.GetUniformLocation(p.program, name);
-                p.SetUniform(loc, reflectors[i].coneDirection);
-                name = lightsArrayName + "[" + i.ToString() + "]." + "coneAngle";
-                loc = GL.GetUniformLocation(p.program, name);
-                p.SetUniform(loc, reflectors[i].coneAngle);
-                name = lightsArrayName + "[" + i.ToString() + "]." + "attenuation";
-                loc = GL.GetUniformLocation(p.program, name);
-                p.SetUniform(loc, reflectors[i].attenuation);
-                name = lightsArrayName + "[" + i.ToString() + "]." + "ambientCoefficient";
-                loc = GL.GetUniformLocation(p.program, name);
-                p.SetUniform(loc, reflectors[i].ambientCoefficient);
-            }
-        }
+        //private void AddLights2Program(ShaderProgram p)
+        //{
+        //    string lightsArrayName = "allLights";
+        //    for(int i = 0; i < reflectors.Count; i++)
+        //    {
+        //       string name = lightsArrayName + "[" + i.ToString() + "]."+"position";
+        //       int loc=GL.GetUniformLocation(p.program,name);
+        //       p.SetUniform(loc, reflectors[i].position);
+        //       name = lightsArrayName + "[" + i.ToString() + "]." + "intensities";
+        //       loc = GL.GetUniformLocation(p.program, name);
+        //       p.SetUniform(loc, reflectors[i].intensities);
+        //        name = lightsArrayName + "[" + i.ToString() + "]." + "coneDirection";
+        //        loc = GL.GetUniformLocation(p.program, name);
+        //        p.SetUniform(loc, reflectors[i].coneDirection);
+        //        name = lightsArrayName + "[" + i.ToString() + "]." + "coneAngle";
+        //        loc = GL.GetUniformLocation(p.program, name);
+        //        p.SetUniform(loc, reflectors[i].coneAngle);
+        //        name = lightsArrayName + "[" + i.ToString() + "]." + "attenuation";
+        //        loc = GL.GetUniformLocation(p.program, name);
+        //        p.SetUniform(loc, reflectors[i].attenuation);
+        //        name = lightsArrayName + "[" + i.ToString() + "]." + "ambientCoefficient";
+        //        loc = GL.GetUniformLocation(p.program, name);
+        //        p.SetUniform(loc, reflectors[i].ambientCoefficient);
+        //    }
+        //}
         protected override void OnLoad(EventArgs e)
         {
             InitGame();
@@ -196,20 +198,20 @@ namespace GK_OpenTK
                 // phi--;
               // offsetCamera.X += change;
               // camera.offset = offsetCamera;
-               gameObjects.First().Rotate(0.1f);
+               gameObjects.First().Rotate(0.1f,lights);
             }
             if (keyState.IsKeyDown(Key.Right))
             {
               //  offsetCamera.X -= change;
               //  camera.offset = offsetCamera;
-               gameObjects.First().Rotate(-0.1f);
+               gameObjects.First().Rotate(-0.1f,lights);
             }
             if (keyState.IsKeyDown(Key.Up))
             {
                 // phi--;
                //  offsetCamera.Y += change;
                 // camera.offset = offsetCamera;
-               gameObjects.First().Move();
+               gameObjects.First().Move(lights);
             }
             if (keyState.IsKeyDown(Key.Down))
             {
@@ -236,9 +238,9 @@ namespace GK_OpenTK
                 lastProg = o.model.Program;
                 // GL.Uniform3(23, new Vector3(-16, 57, -1055f));//-16,57,-1055
                 GL.Uniform1(GL.GetUniformLocation(o.model.Program, "numLights"), 3);
-                GL.Uniform3(lights[0], new Vector3(-16, 57, -1055f));
-                GL.Uniform3(lights[1], new Vector3(-46, 57, -1055f));
-                GL.Uniform3(lights[2], new Vector3(-31, 120, -1000f));
+                GL.Uniform3(lights[0].location, lights[0].position);
+                GL.Uniform3(lights[1].location, lights[1].position);
+                GL.Uniform3(lights[2].location, lights[2].position);
 
             }
         

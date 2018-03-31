@@ -129,6 +129,9 @@
     <Content Include="Shaders\FragmentShaderGouraud.c">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Shaders\FragmentShaderGouraundMultiLights.c">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\FragmentShaderPhongMultiLights.c">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -145,6 +148,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\VertexShaderGouraud.c">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\VertexShaderGouraundMultiLights.c">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\VertexShaderPhongMultiLights.c">

@@ -61,23 +61,39 @@ namespace GK_OpenTK.GameObjects
             GL.UniformMatrix4(21, false, ref _viewMatrix);
             _model.Render();
         }
-        public void Rotate(float angle)
+        public void Rotate(float angle,List<Light> lights)
         {
             //  quat = Quaternion.FromAxisAngle(GL., angle * (float)Math.PI / 180f);
 
             if (rot_dir)
             {
-                var r = Matrix3.CreateRotationY(-angle*(float)Math.PI/180);
-                _direction = Vector3.Normalize(r*_direction);
+                var r = Matrix3.CreateRotationY(-angle * (float)Math.PI / 180);
+                _direction = Vector3.Normalize(r * _direction);
                 camera_angle += -angle * (float)Math.PI / 180;
+                //  var s = Matrix4.CreateScale(_scale);
+                // var r = Matrix4.CreateFromQuaternion(quat);
+                var t2 = Matrix4.CreateTranslation(_possition.X, _possition.Y, _possition.Z);
+                var p1 = Matrix4.CreateTranslation(-_center);
+                var r_l = Matrix4.CreateRotationY((-angle * (float)Math.PI / 180) / 20);
+                var p2 = Matrix4.CreateTranslation(_center);
+                r_l = p1 * r_l * p2;
+                var _modelMatrix = t2 * r_l;
+                for (int i = 0; i < 2; i++)
+                {
+                    lights[i].position = new Matrix3(_modelMatrix) * lights[i].position;
+                }
+
             }
             angle = ang * 180 / (float)Math.PI + angle;
             ang = angle * (float)Math.PI / 180;
         }
-        public void Move()
+
+        public void Move(List<Light> lights)
         {
             _center = _center + _direction * _speed;
             _possition = _possition + new Vector4(_direction * _speed);
+            for (int i = 0; i < 3; i++)
+                lights[i].position += direction * _speed;
         }
         public void SetPosition(Vector4 position)
         {

@@ -7,13 +7,20 @@ using System.Threading.Tasks;
 
 namespace GK_OpenTK
 {
-   public struct Light
+   public class Light
     {
-      public Vector4 position;
-      public  Vector3 intensities;//a.k.a. the color of the light
-      public  float attenuation;//rozpuszczenie
-      public  float ambientCoefficient;
-      public  float coneAngle;
-      public  Vector3 coneDirection;
+        public Vector3 position { get; set; }
+        public int location { get; }//location in a shader program
+        public Light(int loc,Vector3 pos)
+        {
+            location = loc;
+            position = pos;
+        }
+
+      //public  Vector3 intensities;//a.k.a. the color of the light
+      //public  float attenuation;//rozpuszczenie
+      //public  float ambientCoefficient;
+      //public  float coneAngle;
+      //public  Vector3 coneDirection;
     }
 }
