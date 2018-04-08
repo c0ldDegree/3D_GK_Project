@@ -14,7 +14,7 @@ namespace GK_OpenTK.Renderable2
         protected int[] _vbo;
         private int _veo;
         protected int _vertexCount;
-        public int Program => _program;
+        public int Program { get { return _program; } set{ _program = value; } }
         public ARenderable2(int program,int vertexCount)
         {
             _program = program;

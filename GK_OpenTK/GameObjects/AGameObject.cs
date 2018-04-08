@@ -13,7 +13,7 @@ namespace GK_OpenTK.GameObjects
 {
     abstract class AGameObject
     {
-        public bool rot_dir =false;
+        public bool rot_dir = false;
         protected ARenderable2 _model;
         protected Vector4 _possition;
         protected Vector4 _rotation;
@@ -34,6 +34,8 @@ namespace GK_OpenTK.GameObjects
         public float ang = 0;
         public float pom_angle = 0;
         public float camera_angle = 0;
+        private bool is_camera_rot = false;
+        private Matrix4 camera_rot;
 
         public AGameObject(ARenderable2 model, Vector4 rotation, Vector4 possition, Vector3 center, float scale)
         {
@@ -61,23 +63,38 @@ namespace GK_OpenTK.GameObjects
             GL.UniformMatrix4(21, false, ref _viewMatrix);
             _model.Render();
         }
-        public void Rotate(float angle)
+        public void Rotate(float angle, List<Light> lights)
         {
             //  quat = Quaternion.FromAxisAngle(GL., angle * (float)Math.PI / 180f);
 
             if (rot_dir)
             {
-                var r = Matrix3.CreateRotationY(-angle*(float)Math.PI/180);
-                _direction = Vector3.Normalize(r*_direction);
-                camera_angle += -angle * (float)Math.PI / 180;
+                var r = Matrix3.CreateRotationY(-angle * (float)Math.PI / 180);
+                _direction = Vector3.Normalize(r * _direction);
+           
+                var p1 = Matrix4.CreateTranslation(-_center);
+                var r_l = Matrix4.CreateRotationY(-angle * (float)Math.PI / 180);
+                var p2 = Matrix4.CreateTranslation(_center);
+
+                //  r_l = p1* r_l * p2;
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector3 pos = lights[i].position - _center;
+                    pos = new Vector3(r_l * new Vector4(pos, 0));
+                    lights[i].position = _center + pos;
+                }
             }
             angle = ang * 180 / (float)Math.PI + angle;
             ang = angle * (float)Math.PI / 180;
+        
         }
-        public void Move()
+
+        public void Move(List<Light> lights)
         {
             _center = _center + _direction * _speed;
             _possition = _possition + new Vector4(_direction * _speed);
+            for (int i = 0; i < 3; i++)
+                lights[i].position += direction * _speed;
         }
         public void SetPosition(Vector4 position)
         {

@@ -22,7 +22,7 @@ namespace GK_OpenTK
             else
                 busRend = new TextureRender2(program.program, objBus.GetVerts(), objBus.GetIndices());
             AGameObject bus = new CowObject(busRend, new Vector4(0f, 0f, 0f, 0f), position,objBus.CalculateObjectCenter(),100);
-            bus.Rotate(150);
+            bus.Rotate(150,null);
             bus.rot_dir = true;
             return bus;
         }
@@ -35,7 +35,7 @@ namespace GK_OpenTK
             else
                 f16Rend = new TextureRender2(program.program, objF16.GetVerts(), objF16.GetIndices());
             AGameObject f16 = new CowObject(f16Rend, new Vector4(0f, 0f, 0f, 0f), position,objF16.CalculateObjectCenter(),100);
-            f16.Rotate(0);
+            f16.Rotate(0,null);
             return f16;
         }
         public static AGameObject earth(ShaderProgram program, Vector4 position, bool IsTextured)
@@ -67,24 +67,9 @@ namespace GK_OpenTK
                 texturesPath.Add(materials.FirstOrDefault(x => x.Key == mat).Value.DiffuseMap);
             }
             ARenderable2 modelRend;
-            //if (IsTextured)
-            //Vector3[] v = modelObj.GetVerts();
-            //Vector2[] t = modelObj.GetTextureCoords();
-            //Vector3[] n = modelObj.GetNormals();
-            //int[] inds = modelObj.GetIndices();
           
-
             modelRend = new TextureRender2(program.program, modelObj.GetVerts(), modelObj.GetTextureCoords(), modelObj.GetNormals(), modelObj.GetIndices(), textIndices, texturesPath.ToArray());
             AGameObject model = new CowObject(modelRend, new Vector4(0f, 0f, 0f, 0), position,Vector3.Zero);
-
-
-            //MyComplexObjectFactory2 modelObj = MyComplexObjectFactory2.LoadFromFile(@"Models\TheCity.obj", 2);
-            //ARenderable2 modelRend;
-            //if (IsTextured)
-            //    modelRend = new TextureRender2(program.program, modelObj.GetVerts(), modelObj.GetTextureCoords(), modelObj.GetNormals(), modelObj.GetIndices(), @"Textures\earth.jpg");
-            //else
-            //    modelRend = new TextureRender2(program.program, modelObj.GetVerts(), modelObj.GetIndices());
-            //AGameObject model = new CowObject(modelRend, new Vector4(0f, 0f, 0f, 0f), position);
 
             return model;
         }
