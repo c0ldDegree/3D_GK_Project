@@ -20,7 +20,7 @@ namespace GK_OpenTK
     class GameWindow : OpenTK.GameWindow
     {
         private float _time = 0;
-        ARenderable prost;
+     
         ARenderable2 prost2;
         ShaderProgram program;
         private int uniTime;
@@ -84,29 +84,17 @@ namespace GK_OpenTK
             camera = new StaticCamera();
             CreateProjection();
 
-           // GameObjectsFactory.city(program,new Vector4(0,0,-1000,0),false);
+            // GameObjectsFactory.city(program,new Vector4(0,0,-1000,0),false);
             gameObjects.Add(GameObjectsFactory.bus(multiLightsProgram, new Vector4(0, 35, -1000f, 0), isTextured));
             //    gameObjects.Add(GameObjectsFactory.f16(programSimple, new Vector4(0, 0, -100, 0), isTextured));
             // gameObjects.Add(GameObjectsFactory.earth(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-              gameObjects.Add(GameObjectsFactory.f16(multiLightsGouraundProgram, new Vector4(0, 60, -1150, 0), isTextured));
-            //   gameObjects.Add(GameObjectsFactory.city(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
-            // gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
+            gameObjects.Add(GameObjectsFactory.f16(multiLightsGouraundProgram, new Vector4(0, 60, -1150, 0), isTextured));
+            //  gameObjects.Add(GameObjectsFactory.city(programSimple, new Vector4(0, 0, -1000, 0), isTextured));
+            gameObjects.Add(GameObjectsFactory.city(programArrayText, new Vector4(0, 0, -1000, 0), isTextured));
 
             //  uniTime = GL.GetUniformLocation(program.program, "time");
             //GL.Uniform3(23, new Vector3(0, 300, -1150f));//0,2,-100
 
-            //Light reflector = new Light();
-            //reflector.position=new Vector4(0, 60, -1100, 1);
-            //reflector.intensities =new Vector3(2, 2, 2);
-            //reflector.attenuation = 0.1f;
-            //reflector.ambientCoefficient = 0.0f;
-            //reflector.coneAngle = 15.0f;
-            //reflector.coneDirection = gameObjects.First().direction;
-            //reflectors.Add(reflector);
-            //AddLights2Program(multiLightsProgram);
-            //GL.UseProgram(multiLightsProgram.program);
-            // int loc = GL.GetUniformLocation(multiLightsProgram.program, "numLights");
-            // GL.Uniform1(loc, reflectors.Count);
             GL.UseProgram(multiLightsProgram.program);
             lights.Add(new Light(GL.GetUniformLocation(multiLightsProgram.program, "allLights[0].LightPosition_worldspace"), new Vector3(-16, 57, -1055f)));
             lights.Add(new Light(GL.GetUniformLocation(multiLightsProgram.program, "allLights[1].LightPosition_worldspace"), new Vector3(-46, 57, -1055f)));
@@ -114,51 +102,24 @@ namespace GK_OpenTK
             multiLightsProgram.SetUniform(GL.GetUniformLocation(multiLightsProgram.program, "numLights"), 3);
 
         }
-        //private void AddLights2Program(ShaderProgram p)
-        //{
-        //    string lightsArrayName = "allLights";
-        //    for(int i = 0; i < reflectors.Count; i++)
-        //    {
-        //       string name = lightsArrayName + "[" + i.ToString() + "]."+"position";
-        //       int loc=GL.GetUniformLocation(p.program,name);
-        //       p.SetUniform(loc, reflectors[i].position);
-        //       name = lightsArrayName + "[" + i.ToString() + "]." + "intensities";
-        //       loc = GL.GetUniformLocation(p.program, name);
-        //       p.SetUniform(loc, reflectors[i].intensities);
-        //        name = lightsArrayName + "[" + i.ToString() + "]." + "coneDirection";
-        //        loc = GL.GetUniformLocation(p.program, name);
-        //        p.SetUniform(loc, reflectors[i].coneDirection);
-        //        name = lightsArrayName + "[" + i.ToString() + "]." + "coneAngle";
-        //        loc = GL.GetUniformLocation(p.program, name);
-        //        p.SetUniform(loc, reflectors[i].coneAngle);
-        //        name = lightsArrayName + "[" + i.ToString() + "]." + "attenuation";
-        //        loc = GL.GetUniformLocation(p.program, name);
-        //        p.SetUniform(loc, reflectors[i].attenuation);
-        //        name = lightsArrayName + "[" + i.ToString() + "]." + "ambientCoefficient";
-        //        loc = GL.GetUniformLocation(p.program, name);
-        //        p.SetUniform(loc, reflectors[i].ambientCoefficient);
-        //    }
-        //}
+
         protected override void OnLoad(EventArgs e)
         {
             InitGame();
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
             //GL.PointSize(3);
-            
+
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
-           // GL.Enable(EnableCap.Texture2D);
+            // GL.Enable(EnableCap.Texture2D);
         }
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             _time += (float)e.Time;
-          //  GL.Uniform3(23, new Vector3(0, 300, -1150f));//0,2,-100
-            // gameObjects.First().SetPosition(new Vector4(gameObjects.First().possition.X + 0.1f, gameObjects.First().possition.Y, gameObjects.First().possition.Z,0));
+
             GL.Uniform1(uniTime, _time);
             camera.Update(_time, e.Time);
-            // k = k > (int)(PolygonMode.Fill) ? (int)PolygonMode.Point : k;
-            // GL.PolygonMode(MaterialFace.FrontAndBack,(PolygonMode)(k++));
 
             HandleKeyboard(e.Time);
         }
@@ -173,7 +134,7 @@ namespace GK_OpenTK
             }
             if (keyState.IsKeyDown(Key.Number1))
             {
-                offsetCamera = new Vector3(0, 110,150);
+                offsetCamera = new Vector3(0, 110, 150);
                 camera = new FirstPersonCamera(gameObjects.First(), offsetCamera);
             }
             if (keyState.IsKeyDown(Key.Number2))
@@ -198,23 +159,16 @@ namespace GK_OpenTK
             }
             if (keyState.IsKeyDown(Key.Left))
             {
-                // phi--;
-              // offsetCamera.X += change;
-              // camera.offset = offsetCamera;
-               gameObjects.First().Rotate(0.1f,lights);
+
+                gameObjects.First().Rotate(0.1f, lights);
             }
             if (keyState.IsKeyDown(Key.Right))
             {
-              //  offsetCamera.X -= change;
-              //  camera.offset = offsetCamera;
-               gameObjects.First().Rotate(-0.1f,lights);
+                gameObjects.First().Rotate(-0.1f, lights);
             }
             if (keyState.IsKeyDown(Key.Up))
             {
-                // phi--;
-               //  offsetCamera.Y += change;
-                // camera.offset = offsetCamera;
-               gameObjects.First().Move(lights);
+                gameObjects.First().Move(lights);
             }
             if (keyState.IsKeyDown(Key.Down))
             {
@@ -255,8 +209,8 @@ namespace GK_OpenTK
                 GL.Uniform3(lights[2].location, lights[2].position);
 
             }
-        
-            //earth.Render(camera);
+
+
             SwapBuffers();
         }
         protected override void OnClosed(EventArgs e)
@@ -266,11 +220,11 @@ namespace GK_OpenTK
         }
         public override void Exit()
         {
-            // _gameObjectFactory.Dispose();
+
             foreach (var mod in gameObjects)
                 mod.model.Dispose();
             program.Dispose();
-            //  _texturedProgram.Dispose();
+
             base.Exit();
         }
 

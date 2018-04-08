@@ -66,16 +66,10 @@
     <Compile Include="ModelsFactory\MyComplexObjFactory.cs" />
     <Compile Include="ModelsFactory\SimpleObjModelFactory.cs" />
     <Compile Include="Renderable2\ARenderable2.cs" />
-    <Compile Include="Renderable\ARenderable.cs" />
-    <Compile Include="Renderable\ColorRenderObject.cs" />
-    <Compile Include="Renderable\ColorVertex.cs" />
     <Compile Include="GameWindow.cs" />
-    <Compile Include="ObjectFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderable2\TextureRender2.cs" />
-    <Compile Include="Renderable\TextureRenderObject.cs" />
-    <Compile Include="Renderable\TextureVertex.cs" />
     <Compile Include="ShaderProgram.cs" />
     <Compile Include="SOP.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

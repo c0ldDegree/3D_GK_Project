@@ -34,7 +34,8 @@ namespace GK_OpenTK.GameObjects
         public float ang = 0;
         public float pom_angle = 0;
         public float camera_angle = 0;
-        public Vector3 dlHeadlights;
+        private bool is_camera_rot = false;
+        private Matrix4 camera_rot;
 
         public AGameObject(ARenderable2 model, Vector4 rotation, Vector4 possition, Vector3 center, float scale)
         {
@@ -70,20 +71,7 @@ namespace GK_OpenTK.GameObjects
             {
                 var r = Matrix3.CreateRotationY(-angle * (float)Math.PI / 180);
                 _direction = Vector3.Normalize(r * _direction);
-                camera_angle += -angle * (float)Math.PI / 180;
-                //  var s = Matrix4.CreateScale(_scale);
-                // var r = Matrix4.CreateFromQuaternion(quat);
-                //var t2 = Matrix4.CreateTranslation(_possition.X, _possition.Y, _possition.Z);
-                //var p1 = Matrix4.CreateTranslation(-_center);
-                //var r_l = Matrix4.CreateRotationY((-angle * (float)Math.PI / 180));
-                //var p2 = Matrix4.CreateTranslation(_center);
-                //r_l = p1 * r_l * p2;
-                //// var _modelMatrix = t2 * r_l;
-                //for (int i = 0; i < 2; i++)
-                //{
-                //    lights[i].position =new Vector3(lights[i].position.X*_direction.X*_scale, lights[i].position.Y * _direction.Y*_scale, lights[i].position.Z * _direction.Z*_scale);
-                //}
-
+           
                 var p1 = Matrix4.CreateTranslation(-_center);
                 var r_l = Matrix4.CreateRotationY(-angle * (float)Math.PI / 180);
                 var p2 = Matrix4.CreateTranslation(_center);

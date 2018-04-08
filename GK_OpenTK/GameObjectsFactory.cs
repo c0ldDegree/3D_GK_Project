@@ -67,24 +67,9 @@ namespace GK_OpenTK
                 texturesPath.Add(materials.FirstOrDefault(x => x.Key == mat).Value.DiffuseMap);
             }
             ARenderable2 modelRend;
-            //if (IsTextured)
-            //Vector3[] v = modelObj.GetVerts();
-            //Vector2[] t = modelObj.GetTextureCoords();
-            //Vector3[] n = modelObj.GetNormals();
-            //int[] inds = modelObj.GetIndices();
           
-
             modelRend = new TextureRender2(program.program, modelObj.GetVerts(), modelObj.GetTextureCoords(), modelObj.GetNormals(), modelObj.GetIndices(), textIndices, texturesPath.ToArray());
             AGameObject model = new CowObject(modelRend, new Vector4(0f, 0f, 0f, 0), position,Vector3.Zero);
-
-
-            //MyComplexObjectFactory2 modelObj = MyComplexObjectFactory2.LoadFromFile(@"Models\TheCity.obj", 2);
-            //ARenderable2 modelRend;
-            //if (IsTextured)
-            //    modelRend = new TextureRender2(program.program, modelObj.GetVerts(), modelObj.GetTextureCoords(), modelObj.GetNormals(), modelObj.GetIndices(), @"Textures\earth.jpg");
-            //else
-            //    modelRend = new TextureRender2(program.program, modelObj.GetVerts(), modelObj.GetIndices());
-            //AGameObject model = new CowObject(modelRend, new Vector4(0f, 0f, 0f, 0f), position);
 
             return model;
         }
